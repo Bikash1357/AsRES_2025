@@ -1,6 +1,7 @@
 # event_connect
 
-A new Flutter project.
+Developed a cross-platform event management app for the University of Melbourne using Flutter (Dart) for both
+mobile and web, with Firebase as the backend (Auth, Firestore, Storage).
 
 ## Getting Started
 
