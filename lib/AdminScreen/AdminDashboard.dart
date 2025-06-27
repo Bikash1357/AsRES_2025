@@ -126,58 +126,70 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
       body: Column(
         children: [
           // Tab Bar with enhanced styling
-          Container(
-            color: Colors.white,
-            child: TabBar(
-              controller: _tabController,
-              isScrollable: false,
-              indicatorColor: Colors.blue[600],
-              indicatorWeight: 3,
-              indicatorSize: TabBarIndicatorSize.label,
-              labelColor: Colors.blue[600],
-              unselectedLabelColor: Colors.grey[600],
-              labelStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-              tabs: const [
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.dashboard_outlined, size: 18),
-                      SizedBox(width: 8),
-                      Text('Overview'),
-                    ],
-                  ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.people_outline, size: 18),
-                      SizedBox(width: 8),
-                      Text('Attendee'),
-                    ],
-                  ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.event_outlined, size: 18),
-                      SizedBox(width: 8),
-                      Text('Events'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Replace your existing TabBar in the build method with this:
+
+Container(
+  color: Colors.white,
+  child: TabBar(
+    controller: _tabController,
+    isScrollable: true,
+    indicatorColor: Colors.blue[600],
+    indicatorWeight: 3,
+    indicatorSize: TabBarIndicatorSize.label,
+    labelColor: Colors.blue[600],
+    unselectedLabelColor: Colors.grey[600],
+    labelStyle: const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    ),
+    unselectedLabelStyle: const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+    ),
+    // Remove default padding to prevent extra space
+    labelPadding: EdgeInsets.zero,
+    // Add this to control tab alignment
+    tabAlignment: TabAlignment.start,
+    tabs: [
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.dashboard_outlined, size: 18),
+            SizedBox(width: 8),
+            Text('Overview'),
+          ],
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.people_outline, size: 18),
+            SizedBox(width: 8),
+            Text('Attendee'),
+          ],
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.event_outlined, size: 18),
+            SizedBox(width: 8),
+            Text('Events'),
+          ],
+        ),
+      ),
+    ],
+  ),
+),
 
           // Tab Content with Animation
           Expanded(
