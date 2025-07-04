@@ -126,11 +126,17 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
       body: Column(
         children: [
           // Tab Bar with enhanced styling
+          // Replace your existing TabBar in the build method with this:
+
+          // Replace your existing TabBar in the build method with this:
+
+          // Replace your existing TabBar in the build method with this:
+
           Container(
             color: Colors.white,
             child: TabBar(
               controller: _tabController,
-              isScrollable: false,
+              isScrollable: true,
               indicatorColor: Colors.blue[600],
               indicatorWeight: 3,
               indicatorSize: TabBarIndicatorSize.label,
@@ -144,9 +150,16 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
-              tabs: const [
-                Tab(
-                  child: Row(
+              // Remove default padding to prevent extra space
+              labelPadding: EdgeInsets.zero,
+              // Add this to control tab alignment
+              tabAlignment: TabAlignment.start,
+              tabs: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.dashboard_outlined, size: 18),
@@ -155,18 +168,24 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
                     ],
                   ),
                 ),
-                Tab(
-                  child: Row(
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.people_outline, size: 18),
                       SizedBox(width: 8),
-                      Text('Attendee'),
+                      Text('Attendees'),
                     ],
                   ),
                 ),
-                Tab(
-                  child: Row(
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.event_outlined, size: 18),
@@ -994,7 +1013,7 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Attendee ',
+            'Attendees ',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,

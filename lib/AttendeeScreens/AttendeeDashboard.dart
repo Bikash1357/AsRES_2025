@@ -20,7 +20,7 @@ class EventConnectDashboard extends StatefulWidget {
 class _EventConnectDashboardState extends State<EventConnectDashboard>
     with TickerProviderStateMixin {
   int _selectedIndex = 0;
-  final List<String> _tabs = ['Overview', 'Schedule', 'Speakers', 'Location'];
+  final List<String> _tabs = ['Overview', 'Schedule', 'Speaker', 'Location'];
   User? _currentUser;
   bool _isLoading = false;
   int totalNotificationCount =
@@ -573,22 +573,34 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
       body: Column(
         children: [
           // Enhanced Navigation Tabs with animations
+          // Replace the existing tab navigation section in your build method with this code:
+
+// Enhanced Navigation Tabs with scrollable functionality
+          // Replace the existing tab navigation section in your build method with this code:
+
+// Enhanced Navigation Tabs with scrollable functionality
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: _tabs.asMap().entries.map((entry) {
-                int index = entry.key;
-                String tab = entry.value;
-                bool isSelected = _selectedIndex == index;
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              //padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Row(
+                children: _tabs.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String tab = entry.value;
+                  bool isSelected = _selectedIndex == index;
 
-                return Expanded(
-                  child: GestureDetector(
+                  return GestureDetector(
                     onTap: () => _onTabTapped(index),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      constraints: const BoxConstraints(
+                        minWidth: 75, // Minimum width for each tab
+                      ),
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
@@ -608,6 +620,10 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                                 ],
                               )
                             : null,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                        ),
                       ),
                       child: AnimatedDefaultTextStyle(
                         duration: const Duration(milliseconds: 300),
@@ -622,12 +638,14 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                         child: Text(
                           tab,
                           textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
 
