@@ -263,7 +263,7 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
                 icon: Icons.people_outline,
                 iconColor: Colors.blue[600]!,
                 title: 'Total Registered',
-                value: '150',
+                value: '150+',
                 delay: 0,
                 onTap: null,
               ),
@@ -290,7 +290,7 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
                 icon: Icons.event_outlined,
                 iconColor: Colors.purple[600]!,
                 title: 'Total Sessions',
-                value: '32',
+                value: '52+',
                 delay: 200,
                 onTap: () => _showSessionsPopup(),
               ),
@@ -301,7 +301,7 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
                 icon: Icons.person_outline,
                 iconColor: Colors.orange[600]!,
                 title: 'Total Speakers',
-                value: '212',
+                value: '212+',
                 delay: 300,
                 onTap: () => _showSpeakersPopup(),
               ),
@@ -1864,29 +1864,14 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDayHeader('Day 1 - 9th July 2025'),
-                  _buildSessionItem(
-                      'PhD Colloquium Sessions', '7 Sessions', '15 Papers'),
-                  _buildSessionItem(
-                      'Master Class Sessions', '2 Sessions', 'Net Zero Cities'),
+                  _buildDayHeader('Day 1'),
+                  _buildSessionItem('Total Sessions', '17 Sessions', '86 Speakers'),
                   const SizedBox(height: 16),
-                  _buildDayHeader('Day 2 - 10th July 2025'),
-                  _buildSessionItem(
-                      'Keynote Sessions', '2 Sessions', 'Industry Leaders'),
-                  _buildSessionItem(
-                      'Parallel Sessions (Morning)', '5 Sessions', '25 Papers'),
-                  _buildSessionItem('Parallel Sessions (Afternoon)',
-                      '5 Sessions', '25 Papers'),
+                  _buildDayHeader('Day 2'),
+                  _buildSessionItem('Total Sessions', '20 Sessions', '123 New Speakers\n(2 Repeats)'),
                   const SizedBox(height: 16),
-                  _buildDayHeader('Day 3 - 11th July 2025'),
-                  _buildSessionItem(
-                      'Keynote Sessions', '2 Sessions', 'Academic Leaders'),
-                  _buildSessionItem(
-                      'Morning Parallel Sessions', '5 Sessions', '25 Papers'),
-                  _buildSessionItem(
-                      'Panel Sessions', '3 Sessions', 'Expert Panels'),
-                  _buildSessionItem(
-                      'Afternoon Parallel Sessions', '1 Session', '5 Papers'),
+                  _buildDayHeader('Day 3'),
+                  _buildSessionItem('Total Sessions', '15 Sessions', '81 New Speakers'),
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -1914,17 +1899,13 @@ class _EventConnectAdminPageState extends State<EventConnectAdminPage>
                           ],
                         ),
                         const SizedBox(height: 12),
-                        _buildStatRow('Total Sessions:', '32 sessions'),
-                        _buildStatRow('Session Types:',
-                            'Keynotes, Panels, Colloquia, Regular'),
+                        _buildStatRow('Total Sessions:', '52 sessions'),
                         const SizedBox(height: 8),
-                        _buildStatRow('Total Speakers:', '212 unique speakers'),
-                        _buildStatRow('Speaker Types:',
-                            'Keynote, Moderators, Chairs, Presenters'),
-                        const SizedBox(height: 8),
-                        _buildStatRow('Total Papers:', '95 papers'),
-                        _buildStatRow(
-                            'Paper Distribution:', '15 PhD + 80 Peer-reviewed'),
+                        _buildStatRow('Keynote speakers:', '4'),
+                        _buildStatRow('Panel moderators/panelists:', '23'),
+                        _buildStatRow('Session chairs:', '45'),
+                        _buildStatRow('Academic presenters:', '190+'),
+                        _buildStatRow('Discussants:', '28+'),
                       ],
                     ),
                   ),

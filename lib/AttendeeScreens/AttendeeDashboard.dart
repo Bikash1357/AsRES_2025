@@ -6,6 +6,7 @@ import 'package:event_connect/AttendeeScreens/AttendeeSpeakers.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../auth/SignIN.dart';
 import 'AttendeeRecentUpdate.dart';
@@ -20,7 +21,12 @@ class EventConnectDashboard extends StatefulWidget {
 class _EventConnectDashboardState extends State<EventConnectDashboard>
     with TickerProviderStateMixin {
   int _selectedIndex = 0;
-  final List<String> _tabs = ['Overview', 'Schedule', 'Speaker', 'Location'];
+  final List<String> _tabs = [
+    'Overview',
+    'Schedule',
+    'Speakers & Sessions',
+    'Location'
+  ];
   User? _currentUser;
   bool _isLoading = false;
   int totalNotificationCount =
@@ -412,7 +418,7 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
       case 1:
         return const SchedulePage();
       case 2:
-        return const SpeakersPage();
+        return SpeakersPage();
       case 3:
         return const LocationPage();
       default:
@@ -849,6 +855,9 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
           const SizedBox(height: 24),
 
           // Event Details Section with staggered animation
+          // Updated Event Details Section in _buildOverviewContent method
+// Replace the existing "Event Details Section" container with this code:
+
           TweenAnimationBuilder<double>(
             tween: Tween<double>(begin: 0.0, end: 1.0),
             duration: const Duration(milliseconds: 800),
@@ -892,7 +901,7 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                         ),
                         const SizedBox(height: 16),
 
-                        // Site Visit Info
+                        // Conference Overview
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -904,16 +913,16 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Day 1 - Site Visit',
+                                'Conference Overview',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue[800],
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 12),
                               Text(
-                                'Melbourne-based project with a decarbonization and net-zero focus (500 Bourke St): 15:45 – 18:00pm\n\n(Limited seats on first come first serve basis, Registration required)',
+                                '• Event Name: AsRES International Real Estate Conference 2025\n• Dates: July 9-11, 2025 (3 days)\n• Venues:\n  - Day 1: Melbourne Business School\n  - Day 2-3: Marriott Docklands, Melbourne\n• Focus: Real Estate Research, Sustainability, Net Zero Cities, AI in Real Estate',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[700],
@@ -926,37 +935,62 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
 
                         const SizedBox(height: 16),
 
-                        // Papers and Sessions Info
+                        // Key Statistics
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.grey[50],
+                            color: Colors.green[50],
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey[200]!),
+                            border: Border.all(color: Colors.green[200]!),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Conference Statistics',
+                                'Key Statistics',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
+                                  color: Colors.green[800],
                                 ),
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                'Peer reviewed papers: 45 (9 sessions)\nPhD: 15 (3 sessions)',
+                                '• Total Papers: 100+ research presentations\n• PhD Sessions: 5 colloquiums with emerging researchers\n• Peer-Reviewed Sessions: Multiple academic sessions\n• International Scope: Asia-Pacific focus with global participation\n• Industry-Academia Bridge: Strong collaboration between researchers and practitioners',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[700],
                                   height: 1.4,
                                 ),
                               ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Featured Speakers & Sessions
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.purple[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.purple[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Featured Speakers & Sessions',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.purple[800],
+                                ),
+                              ),
                               const SizedBox(height: 12),
                               Text(
-                                'Sessions:',
+                                'Keynote Speakers:',
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
@@ -965,11 +999,213 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Day 1 – 9 (3 PhD sessions = 15 papers, 3 peer reviewed = 15 papers, 3 non-peer reviewed = 18 papers) = 48 papers\n\nDay 2 – 10 (6 peer reviewed sessions = 30 papers; 4 non-peer reviewed sessions = 20 papers) = 50 papers\n\nDay 3 – 18 (18 non peer-reviews = 90 papers)\n\nTotal: 188 papers',
+                                '• Jason F. Yong (Chief Investment Officer, CapitalxWise) - "Accelerating Real Estate Capital & Dealmaking in an AI Era"\n• Professor Naoyuki Yoshino (Professor Emeritus, Keio University, Former Dean ADB Institute)\n• Deputy Lord Mayor Roshena Campbell (City of Melbourne)\n• Peter Verwer - "REITs 4.0: New Frontiers of Global Securitisation"',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[700],
                                   height: 1.4,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Special Programs:',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                '• Net Zero Cities Masterclass - Full-day intensive program\n• AsRES Women in Property Panel - Professional development and networking\n• MDPI Journals Panel - Urban regeneration lessons from Melbourne Docklands\n• PhD Scholars Mentoring - Career development for emerging researchers',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Research Themes & Topics
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.orange[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.orange[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Research Themes & Topics',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.orange[800],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Core Areas:\n1. Sustainability & Climate Change\n2. Financial Markets & Investment\n3. Housing & Affordability\n4. Technology & Data Analytics\n5. Urban Planning & Transport\n6. ESG & Sustainable Finance',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Special Events & Networking
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.teal[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.teal[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Special Events & Networking',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal[800],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Professional Development:\n• Site Visit: 500 Bourke St - Net zero building project (Limited capacity)\n• Industry Panels: Property finance and investment trends\n• Networking Sessions: Welcome reception, conference dinners\n• Exhibition: MSDx student works at Melbourne School of Design\n\nSocial Events:\n• Welcome Reception: University House, Law Building\n• Conference Dinner: Marriott Docklands\n• Gala Dinner: Cargo Hall, South Wharf',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Innovation Highlights
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.indigo[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.indigo[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Innovation Highlights',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.indigo[800],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                '• AI Integration: Focus on artificial intelligence in real estate operations\n• Sustainability Leadership: Comprehensive net zero and climate adaptation strategies\n• Policy Innovation: Evidence-based policy recommendations\n• Technology Adoption: Digital transformation in property markets',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Official AsRES Website
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[300]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Official Site of AsRES',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              GestureDetector(
+                                onTap: () async {
+                                  final Uri url = Uri.parse(
+                                      'https://www.asres.org/boardOfdirectors.html');
+                                  try {
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url,
+                                          mode: LaunchMode.externalApplication);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Could not launch URL'),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Error opening URL: $e'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[50],
+                                    borderRadius: BorderRadius.circular(6),
+                                    border:
+                                        Border.all(color: Colors.blue[200]!),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.language,
+                                          color: Colors.blue[600], size: 20),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          'https://www.asres.org/boardOfdirectors.html',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blue[600],
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(Icons.open_in_new,
+                                          color: Colors.blue[600], size: 18),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
