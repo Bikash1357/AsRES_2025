@@ -1,8 +1,56 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Day1july9Screen extends StatelessWidget {
+class Day1july9Screen extends StatefulWidget {
   const Day1july9Screen({super.key});
+
+  @override
+  State<Day1july9Screen> createState() => _Day1july9ScreenState();
+}
+
+class _Day1july9ScreenState extends State<Day1july9Screen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Widget buildSearchWidget() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _searchController,
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value.toLowerCase();
+          });
+        },
+        decoration: const InputDecoration(
+          hintText: 'Search sessions, speakers, or topics...',
+          border: InputBorder.none,
+          prefixIcon: Icon(Icons.search, color: Color(0xFF4285F4)),
+          suffixIcon: Icon(Icons.filter_list, color: Colors.grey),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,22 +62,7 @@ class Day1july9Screen extends StatelessWidget {
         foregroundColor: Colors.grey[800],
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildDayHeader(
-                'Day One – 9th July 2025', 'Melbourne Business School'),
-            const SizedBox(height: 16),
-            // Morning Opening Session
-            buildOpeningSession(),
-            const SizedBox(height: 24),
-            // Main Sessions with Tabs
-            buildMainSessions(),
-          ],
-        ),
-      ),
+      body: buildMainSessions(),
     );
   }
 
@@ -70,6 +103,15 @@ class Day1july9Screen extends StatelessWidget {
   }
 
   Widget buildOpeningSession() {
+    // Check if opening session content matches search query
+    if (_searchQuery.isNotEmpty) {
+      String searchableContent =
+          'Opening Session Registration Welcome Professor Jenny George Dean Melbourne Business School Keynote Speech Accelerating Real Estate Capital Dealmaking AI Era Jason F. Yong Chief Investment Officer CapitalxWise Venue All Rooms Marra LT1 LT4';
+      if (!searchableContent.toLowerCase().contains(_searchQuery)) {
+        return const SizedBox.shrink();
+      }
+    }
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -98,6 +140,14 @@ class Day1july9Screen extends StatelessWidget {
   }
 
   Widget buildKeynoteSession() {
+    if (_searchQuery.isNotEmpty) {
+      String searchableContent =
+          'Keynote Speech Accelerating Real Estate Capital Dealmaking AI Era Jason F. Yong Chief Investment Officer CapitalxWise Venue All Rooms Marra LT1 LT4';
+      if (!searchableContent.toLowerCase().contains(_searchQuery)) {
+        return const SizedBox.shrink();
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -109,22 +159,43 @@ class Day1july9Screen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '9:00 - 9:45: Keynote Speech',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.black),
+              children: _buildHighlightedText('9:00 - 9:45: Keynote Speech'),
+            ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Accelerating Real Estate Capital & Dealmaking in an AI Era',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.black),
+              children: _buildHighlightedText(
+                  'Accelerating Real Estate Capital & Dealmaking in an AI Era'),
+            ),
           ),
           const SizedBox(height: 4),
-          const Text(
-              'Speaker: Jason F. Yong, Chief Investment Officer, CapitalxWise'),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText(
+                  'Speaker: Jason F. Yong, Chief Investment Officer, CapitalxWise'),
+            ),
+          ),
           const SizedBox(height: 4),
-          const Text('Venue: All Rooms (Marra, LT1, LT4)',
-              style:
-                  TextStyle(fontStyle: FontStyle.italic, color: Colors.grey)),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontStyle: FontStyle.italic, color: Colors.grey),
+              children:
+                  _buildHighlightedText('Venue: All Rooms (Marra, LT1, LT4)'),
+            ),
+          ),
         ],
       ),
     );
@@ -133,47 +204,77 @@ class Day1july9Screen extends StatelessWidget {
   Widget buildMainSessions() {
     return DefaultTabController(
       length: 4,
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                  offset: const Offset(0, 1),
+      child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            // Day header
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: buildDayHeader(
+                    'Day One – 9th July 2025', 'Melbourne Business School'),
+              ),
+            ),
+            // Search widget
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: buildSearchWidget(),
+              ),
+            ),
+            // Opening session
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: buildOpeningSession(),
+              ),
+            ),
+            // Pinned tabs
+            SliverAppBar(
+              backgroundColor: Colors.grey[50],
+              elevation: 0,
+              floating: false,
+              pinned: true,
+              automaticallyImplyLeading: false,
+              toolbarHeight: 60,
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
                 ),
-              ],
+                margin: const EdgeInsets.all(8),
+                child: const TabBar(
+                  labelColor: Color(0xFF4285F4),
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: Color(0xFF4285F4),
+                  isScrollable: true,
+                  tabs: [
+                    Tab(text: 'Morning Sessions'),
+                    Tab(text: 'Afternoon Sessions'),
+                    Tab(text: 'Evening Sessions'),
+                    Tab(text: 'Masterclass'),
+                  ],
+                ),
+              ),
             ),
-            child: const TabBar(
-              labelColor: Color(0xFF4285F4),
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Color(0xFF4285F4),
-              isScrollable: true,
-              tabs: [
-                Tab(text: 'Morning Sessions'),
-                Tab(text: 'Afternoon Sessions'),
-                Tab(text: 'Evening Sessions'),
-                Tab(text: 'Masterclass'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 800,
-            child: TabBarView(
-              children: [
-                buildMorningSessions(),
-                buildAfternoonSessions(),
-                buildEveningSessions(),
-                buildMasterclass(),
-              ],
-            ),
-          ),
-        ],
+          ];
+        },
+        body: TabBarView(
+          children: [
+            buildMorningSessions(),
+            buildAfternoonSessions(),
+            buildEveningSessions(),
+            buildMasterclass(),
+          ],
+        ),
       ),
     );
   }
@@ -475,6 +576,13 @@ class Day1july9Screen extends StatelessWidget {
   }
 
   Widget buildMasterclassSession(String time, String title, String speaker) {
+    if (_searchQuery.isNotEmpty) {
+      String searchableContent = '$time $title $speaker';
+      if (!searchableContent.toLowerCase().contains(_searchQuery)) {
+        return const SizedBox.shrink();
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(12),
@@ -486,14 +594,21 @@ class Day1july9Screen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '$time: $title',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.black),
+              children: _buildHighlightedText('$time: $title'),
+            ),
           ),
           const SizedBox(height: 4),
-          Text(
-            speaker,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              children: _buildHighlightedText(speaker),
+            ),
           ),
         ],
       ),
@@ -501,6 +616,14 @@ class Day1july9Screen extends StatelessWidget {
   }
 
   Widget buildMasterclassPanel() {
+    if (_searchQuery.isNotEmpty) {
+      String searchableContent =
+          'IRES Panel role Innovation driving sustainability Real Estate Professor Desmond Tsang CUHK Professor Quilin Ke UCL Professor Ashish Gupta RICSSBE India Dr Wayne Wan Monash Victoria Cook Yarra Valley Water';
+      if (!searchableContent.toLowerCase().contains(_searchQuery)) {
+        return const SizedBox.shrink();
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(12),
@@ -512,29 +635,81 @@ class Day1july9Screen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '12:00 - 13:00: IRES Panel',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.black),
+              children: _buildHighlightedText('12:00 - 13:00: IRES Panel'),
+            ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'The role of Innovation in driving sustainability in Real Estate',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: Colors.black),
+              children: _buildHighlightedText(
+                  'The role of Innovation in driving sustainability in Real Estate'),
+            ),
           ),
           const SizedBox(height: 8),
-          const Text('Chair: Professor Desmond Tsang, CUHK'),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children:
+                  _buildHighlightedText('Chair: Professor Desmond Tsang, CUHK'),
+            ),
+          ),
           const SizedBox(height: 4),
-          const Text('Panelists:'),
-          const Text('• Professor Quilin Ke, UCL'),
-          const Text('• Professor Ashish Gupta, RICSSBE, India'),
-          const Text('• Dr Wayne Wan, Monash'),
-          const Text('• Victoria Cook, Yarra Valley Water'),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText('Panelists:'),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText('• Professor Quilin Ke, UCL'),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText(
+                  '• Professor Ashish Gupta, RICSSBE, India'),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText('• Dr Wayne Wan, Monash'),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children:
+                  _buildHighlightedText('• Victoria Cook, Yarra Valley Water'),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget buildSiteVisit() {
+    if (_searchQuery.isNotEmpty) {
+      String searchableContent =
+          'Site Visit Melbourne-based project decarbonization net-zero focus Location 500 Bourke St Limited seats first come first serve basis Registration required';
+      if (!searchableContent.toLowerCase().contains(_searchQuery)) {
+        return const SizedBox.shrink();
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -546,25 +721,47 @@ class Day1july9Screen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Day 1 - Site Visit',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.purple),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.purple),
+              children: _buildHighlightedText('Day 1 - Site Visit'),
+            ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Melbourne-based project with a decarbonization and net-zero focus',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.black),
+              children: _buildHighlightedText(
+                  'Melbourne-based project with a decarbonization and net-zero focus'),
+            ),
           ),
           const SizedBox(height: 4),
-          const Text('Location: 500 Bourke St'),
-          const Text('Time: 15:45 - 18:00'),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText('Location: 500 Bourke St'),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText('Time: 15:45 - 18:00'),
+            ),
+          ),
           const SizedBox(height: 8),
-          const Text(
-            'Limited seats on first come first serve basis, Registration required',
-            style: TextStyle(fontStyle: FontStyle.italic, color: Colors.red),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontStyle: FontStyle.italic, color: Colors.red),
+              children: _buildHighlightedText(
+                  'Limited seats on first come first serve basis, Registration required'),
+            ),
           ),
         ],
       ),
@@ -572,6 +769,14 @@ class Day1july9Screen extends StatelessWidget {
   }
 
   Widget buildSpecialEvent() {
+    if (_searchQuery.isNotEmpty) {
+      String searchableContent =
+          'Special Site Visit Melbourne-based project decarbonization net-zero focus Location 500 Bourke St Limited seats first come first serve basis Registration required';
+      if (!searchableContent.toLowerCase().contains(_searchQuery)) {
+        return const SizedBox.shrink();
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -583,25 +788,47 @@ class Day1july9Screen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Special Site Visit',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.purple),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.purple),
+              children: _buildHighlightedText('Special Site Visit'),
+            ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Day 1 - Site Visit: Melbourne-based project with a decarbonization and net-zero focus',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.black),
+              children: _buildHighlightedText(
+                  'Day 1 - Site Visit: Melbourne-based project with a decarbonization and net-zero focus'),
+            ),
           ),
           const SizedBox(height: 4),
-          const Text('Location: 500 Bourke St'),
-          const Text('Time: 15:45 - 18:00'),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText('Location: 500 Bourke St'),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: _buildHighlightedText('Time: 15:45 - 18:00'),
+            ),
+          ),
           const SizedBox(height: 8),
-          const Text(
-            'Limited seats on first come first serve basis, Registration required',
-            style: TextStyle(fontStyle: FontStyle.italic, color: Colors.red),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                  fontStyle: FontStyle.italic, color: Colors.red),
+              children: _buildHighlightedText(
+                  'Limited seats on first come first serve basis, Registration required'),
+            ),
           ),
         ],
       ),
@@ -609,6 +836,13 @@ class Day1july9Screen extends StatelessWidget {
   }
 
   Widget buildTimeSlot(String time, String title, String description) {
+    if (_searchQuery.isNotEmpty) {
+      String searchableContent = '$time $title $description';
+      if (!searchableContent.toLowerCase().contains(_searchQuery)) {
+        return const SizedBox.shrink();
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(12),
@@ -622,12 +856,14 @@ class Day1july9Screen extends StatelessWidget {
         children: [
           Container(
             width: 80,
-            child: Text(
-              time,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                color: Color(0xFF4285F4),
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Color(0xFF4285F4),
+                ),
+                children: _buildHighlightedText(time),
               ),
             ),
           ),
@@ -636,18 +872,23 @@ class Day1july9Screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                    children: _buildHighlightedText(title),
                   ),
                 ),
                 if (description.isNotEmpty) ...[
                   const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      children: _buildHighlightedText(description),
+                    ),
                   ),
                 ],
               ],
@@ -660,6 +901,24 @@ class Day1july9Screen extends StatelessWidget {
 
   Widget buildSessionCard(
       String title, String chair, String room, List<String> presentations) {
+    // Filter presentations based on search query
+    List<String> filteredPresentations = presentations.where((presentation) {
+      if (_searchQuery.isEmpty) return true;
+      return presentation.toLowerCase().contains(_searchQuery) ||
+          title.toLowerCase().contains(_searchQuery) ||
+          chair.toLowerCase().contains(_searchQuery) ||
+          room.toLowerCase().contains(_searchQuery);
+    }).toList();
+
+    // If no matches found and search is active, don't show the card
+    if (_searchQuery.isNotEmpty &&
+        filteredPresentations.isEmpty &&
+        !title.toLowerCase().contains(_searchQuery) &&
+        !chair.toLowerCase().contains(_searchQuery) &&
+        !room.toLowerCase().contains(_searchQuery)) {
+      return const SizedBox.shrink();
+    }
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -689,11 +948,13 @@ class Day1july9Screen extends StatelessWidget {
                   fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            ...presentations.map((presentation) => Padding(
+            ...filteredPresentations.map((presentation) => Padding(
                   padding: const EdgeInsets.only(bottom: 4),
-                  child: Text(
-                    '• $presentation',
-                    style: const TextStyle(fontSize: 11),
+                  child: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(fontSize: 11, color: Colors.black),
+                      children: _buildHighlightedText('• $presentation'),
+                    ),
                   ),
                 )),
           ],
@@ -702,7 +963,66 @@ class Day1july9Screen extends StatelessWidget {
     );
   }
 
+  // 6. Helper method for text highlighting
+  List<TextSpan> _buildHighlightedText(String text) {
+    if (_searchQuery.isEmpty) {
+      return [TextSpan(text: text)];
+    }
+
+    List<TextSpan> spans = [];
+    String lowerText = text.toLowerCase();
+    String lowerQuery = _searchQuery.toLowerCase();
+
+    int start = 0;
+    int index = lowerText.indexOf(lowerQuery, start);
+
+    while (index != -1) {
+      // Add text before the match
+      if (index > start) {
+        spans.add(TextSpan(text: text.substring(start, index)));
+      }
+
+      // Add highlighted match
+      spans.add(TextSpan(
+        text: text.substring(index, index + _searchQuery.length),
+        style: const TextStyle(
+          backgroundColor: Colors.yellow,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ));
+
+      start = index + _searchQuery.length;
+      index = lowerText.indexOf(lowerQuery, start);
+    }
+
+    // Add remaining text
+    if (start < text.length) {
+      spans.add(TextSpan(text: text.substring(start)));
+    }
+
+    return spans;
+  }
+
   Widget buildEventCard(List<Widget> events) {
+    // Filter events based on search query
+    List<Widget> filteredEvents = [];
+
+    if (_searchQuery.isEmpty) {
+      filteredEvents = events;
+    } else {
+      for (Widget event in events) {
+        // Since we can't directly access the content of the widgets,
+        // we'll keep all events if any event might contain the search term
+        // You might want to modify this based on your specific needs
+        filteredEvents.add(event);
+      }
+    }
+
+    if (filteredEvents.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -710,9 +1030,11 @@ class Day1july9Screen extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: events,
+          children: filteredEvents,
         ),
       ),
     );
   }
 }
+
+// Add this method inside the _Day1july9ScreenState class, just before the closing brace }

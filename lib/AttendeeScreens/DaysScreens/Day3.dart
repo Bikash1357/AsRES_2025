@@ -1,8 +1,80 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Day3july11Screen extends StatelessWidget {
+class Day3july11Screen extends StatefulWidget {
   const Day3july11Screen({super.key});
+
+  @override
+  State<Day3july11Screen> createState() => _Day3july11ScreenState();
+}
+
+class _Day3july11ScreenState extends State<Day3july11Screen> {
+  String searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  // Add this method to check if content matches search query
+  bool _matchesSearch(String content) {
+    if (searchQuery.isEmpty) return true;
+    return content.toLowerCase().contains(searchQuery.toLowerCase());
+  }
+
+  // Add this method to highlight searched text
+  Widget _buildHighlightedText(String text, {TextStyle? style}) {
+    if (searchQuery.isEmpty) {
+      return Text(text, style: style);
+    }
+
+    final query = searchQuery.toLowerCase();
+    final textLower = text.toLowerCase();
+
+    if (!textLower.contains(query)) {
+      return Text(text, style: style);
+    }
+
+    List<TextSpan> spans = [];
+    int start = 0;
+
+    while (start < text.length) {
+      final index = textLower.indexOf(query, start);
+      if (index == -1) {
+        // No more matches, add the rest of the text
+        spans.add(TextSpan(
+          text: text.substring(start),
+          style: style,
+        ));
+        break;
+      }
+
+      // Add text before the match
+      if (index > start) {
+        spans.add(TextSpan(
+          text: text.substring(start, index),
+          style: style,
+        ));
+      }
+
+      // Add the highlighted match
+      spans.add(TextSpan(
+        text: text.substring(index, index + query.length),
+        style: (style ?? const TextStyle()).copyWith(
+          backgroundColor: Colors.yellow,
+          fontWeight: FontWeight.bold,
+        ),
+      ));
+
+      start = index + query.length;
+    }
+
+    return RichText(
+      text: TextSpan(children: spans),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +93,56 @@ class Day3july11Screen extends StatelessWidget {
           children: [
             buildDayHeader('Day Three – 11th July 2025', 'Marriott Docklands'),
             const SizedBox(height: 24),
+
+            // Search Bar
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey[300]!),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.search, color: Colors.grey[600]),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        hintText: 'Search sessions, speakers, topics...',
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value;
+                        });
+                      },
+                    ),
+                  ),
+                  if (searchQuery.isNotEmpty)
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {
+                          searchQuery = '';
+                        });
+                      },
+                    ),
+                ],
+              ),
+            ),
 
             // Morning Session (9:00 - 10:30)
             _buildTimeSlot(
@@ -318,6 +440,16 @@ class Day3july11Screen extends StatelessWidget {
   }
 
   Widget _buildTimeSlot(String time, List<Widget> venues) {
+    // Filter out hidden venues
+    final filteredVenues = venues
+        .where((venue) => venue is! SizedBox || (venue as SizedBox).height != 0)
+        .toList();
+
+    // If no venues match the search, don't show the time slot
+    if (filteredVenues.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
@@ -343,7 +475,7 @@ class Day3july11Screen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            ...venues,
+            ...filteredVenues,
           ],
         ),
       ),
@@ -358,6 +490,23 @@ class Day3july11Screen extends StatelessWidget {
     String additional,
     Color color,
   ) {
+    // Check if this session matches the search query
+    bool matchesTitle = _matchesSearch(title);
+    bool matchesVenue = _matchesSearch(venue);
+    bool matchesModerator = _matchesSearch(moderator);
+    bool matchesItems = items.any((item) => _matchesSearch(item));
+    bool matchesAdditional = _matchesSearch(additional);
+
+    bool shouldShow = matchesTitle ||
+        matchesVenue ||
+        matchesModerator ||
+        matchesItems ||
+        matchesAdditional;
+
+    if (!shouldShow) {
+      return const SizedBox.shrink(); // Hide if doesn't match search
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -397,7 +546,7 @@ class Day3july11Screen extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(
+                  child: _buildHighlightedText(
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -415,7 +564,7 @@ class Day3july11Screen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (moderator.isNotEmpty) ...[
-                  Text(
+                  _buildHighlightedText(
                     moderator,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -441,7 +590,7 @@ class Day3july11Screen extends StatelessWidget {
                               ),
                             ),
                             Expanded(
-                              child: Text(
+                              child: _buildHighlightedText(
                                 item,
                                 style: const TextStyle(
                                   fontSize: 13,
@@ -455,7 +604,7 @@ class Day3july11Screen extends StatelessWidget {
                 ],
                 if (additional.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                  Text(
+                  _buildHighlightedText(
                     additional,
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
