@@ -2,6 +2,7 @@ import 'package:event_connect/AdminScreen/AdminDashboard.dart';
 import 'package:event_connect/AttendeeScreens/AboutAsRES.dart';
 import 'package:event_connect/AttendeeScreens/AttendeeLocation.dart';
 import 'package:event_connect/AttendeeScreens/AttendeeSchedule.dart';
+import 'package:event_connect/search_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -672,6 +673,24 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
           ),
         ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => GlobalSearchScreen(),
+      //       ),
+      //     );
+      //   },
+      //   backgroundColor: const Color(0xFF4285F4),
+      //   elevation: 8,
+      //   child: const Icon(
+      //     Icons.search,
+      //     color: Colors.white,
+      //     size: 28,
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
