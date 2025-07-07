@@ -906,7 +906,7 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                         ElevatedButton.icon(
                           onPressed: () async {
                             final Uri url = Uri.parse(
-                                'https://drive.google.com/file/d/1RYOEjl5GKkaDyNNasg4eGg1efoV5h_cD/view?usp=drive_link');
+                                'https://drive.google.com/file/d/147yqiLa-kthxg2uYptbnOgHQCNaxHO2y/view?usp=sharing');
                             try {
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url,
