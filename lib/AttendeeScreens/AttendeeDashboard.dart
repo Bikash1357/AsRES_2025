@@ -23,7 +23,7 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
   int _selectedIndex = 0;
   final List<String> _tabs = [
     'Overview',
-    'Schedule',
+    'Full Schedule',
     'Speakers & Sessions',
     'Location'
   ];
