@@ -1,3 +1,6 @@
+import 'package:event_connect/AttendeeScreens/DaysScreens/Day1.dart';
+import 'package:event_connect/AttendeeScreens/DaysScreens/Day2.dart';
+import 'package:event_connect/AttendeeScreens/DaysScreens/Day3.dart';
 import 'package:flutter/material.dart';
 
 class SpeakersPage extends StatefulWidget {
@@ -61,6 +64,24 @@ class OverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Added summary text above Conference Summary
+          Card(
+            elevation: 2,
+            color: Colors.blue[50],
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Quick summary of conference for full details please visit Schedule Tab',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.blue[800],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
           _buildSummaryCard(),
           SizedBox(height: 16),
           _buildDailyBreakdown(),
@@ -219,6 +240,42 @@ class DayOneTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Added summary text and navigation button
+          Card(
+            elevation: 2,
+            color: Colors.blue[50],
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Quick summary of conference day 1 for full details please',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blue[800],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Day1july9Screen()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[800],
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text('Click Here'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
           _buildDayHeader('Day 1 - July 9, 2025', '86 speakers', '17 sessions'),
           SizedBox(height: 16),
           _buildSessionCategory('Keynote Speakers', [
@@ -322,6 +379,42 @@ class DayTwoTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Added summary text and navigation button
+          Card(
+            elevation: 2,
+            color: Colors.green[50],
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Quick summary of conference day 2 for full details please',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.green[800],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Day2july10Screen()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text('Click Here'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
           _buildDayHeader(
               'Day 2 - July 10, 2025', '123 speakers', '20 sessions'),
           SizedBox(height: 16),
@@ -422,6 +515,42 @@ class DayThreeTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Added summary text and navigation button
+          Card(
+            elevation: 2,
+            color: Colors.orange[50],
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Quick summary of conference day 3 for full details please',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.orange[800],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Day3july11Screen()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange[800],
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text('Click Here'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
           _buildDayHeader(
               'Day 3 - July 11, 2025', '81 speakers', '15 sessions'),
           SizedBox(height: 16),
