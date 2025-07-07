@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LocationPage extends StatelessWidget {
   const LocationPage({super.key});
@@ -19,35 +21,42 @@ class LocationPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Main Venue Card
-            _buildVenueCard(
+            buildVenueCard(
               context,
               'Melbourne Business School',
               'The University of Melbourne',
               Icons.business,
               Colors.blue,
+              'https://maps.app.goo.gl/63wY8ZyE7KyLkx7j8?g_st=iw',
+              'Melbourne Business School',
             ),
             const SizedBox(height: 16),
-
             // Secondary Venue Card
-            _buildVenueCard(
+            buildVenueCard(
               context,
-              'Marriott Melbourne Docklands',
+              'Marriott Docklands',
               'Day 2 & 3 Venue',
               Icons.hotel,
               Colors.green,
+              'https://maps.app.goo.gl/oRwyr26n1wstQgCr9?g_st=iw',
+              'Marriott Docklands',
             ),
             const SizedBox(height: 24),
-
-            // Additional Info Card
-            _buildInfoCard(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildVenueCard(BuildContext context, String title, String subtitle,
-      IconData icon, Color color) {
+  Widget buildVenueCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    String mapUrl,
+    String searchQuery,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -105,12 +114,65 @@ class LocationPage extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          // Get Direction Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => _openGoogleMaps(mapUrl, searchQuery),
+              icon: const Icon(Icons.directions, color: Colors.white),
+              label: const Text(
+                'Get Direction',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white.withOpacity(0.2),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildInfoCard() {
+  Future<void> _openGoogleMaps(String url, String searchQuery) async {
+    try {
+      // Check if running on mobile platform
+      if (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS) {
+        // Mobile: Try to open the specific URL first
+        final Uri uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+          return;
+        }
+      }
+
+      // Non-mobile or if direct URL fails: Open Google Maps with search query
+      final String googleMapsSearchUrl =
+          'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(searchQuery)}';
+      final Uri searchUri = Uri.parse(googleMapsSearchUrl);
+
+      if (await canLaunchUrl(searchUri)) {
+        await launchUrl(searchUri, mode: LaunchMode.externalApplication);
+      } else {
+        debugPrint('Could not launch Google Maps');
+      }
+    } catch (e) {
+      debugPrint('Error opening Google Maps: $e');
+    }
+  }
+
+  Widget buildInfoCard() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -126,59 +188,6 @@ class LocationPage extends StatelessWidget {
             color: Colors.grey.withOpacity(0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(Icons.info_outline,
-                    color: Colors.white, size: 20),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Important Information',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildInfoItem('🚗', 'Parking available on campus'),
-          _buildInfoItem('🚊', 'Accessible via public transport'),
-          _buildInfoItem('♿', 'Wheelchair accessible facilities'),
-          _buildInfoItem('📶', 'Free WiFi throughout the venue'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoItem(String emoji, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 16)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.white,
-              ),
-            ),
           ),
         ],
       ),

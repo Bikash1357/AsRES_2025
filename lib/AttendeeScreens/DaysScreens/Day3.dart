@@ -111,37 +111,37 @@ class _Day3july11ScreenState extends State<Day3july11Screen> {
                   ),
                 ],
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.search, color: Colors.grey[600]),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        hintText: 'Search sessions, speakers, topics...',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.grey),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          searchQuery = value;
-                        });
-                      },
-                    ),
-                  ),
-                  if (searchQuery.isNotEmpty)
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() {
-                          searchQuery = '';
-                        });
-                      },
-                    ),
-                ],
-              ),
+              // child: Row(
+              //   children: [
+              //     Icon(Icons.search, color: Colors.grey[600]),
+              //     const SizedBox(width: 12),
+              //     Expanded(
+              //       child: TextField(
+              //         controller: _searchController,
+              //         decoration: const InputDecoration(
+              //           hintText: 'Search sessions, speakers, topics...',
+              //           border: InputBorder.none,
+              //           hintStyle: TextStyle(color: Colors.grey),
+              //         ),
+              //         onChanged: (value) {
+              //           setState(() {
+              //             searchQuery = value;
+              //           });
+              //         },
+              //       ),
+              //     ),
+              //     if (searchQuery.isNotEmpty)
+              //       IconButton(
+              //         icon: const Icon(Icons.clear),
+              //         onPressed: () {
+              //           _searchController.clear();
+              //           setState(() {
+              //             searchQuery = '';
+              //           });
+              //         },
+              //       ),
+              //   ],
+              // ),
             ),
 
             // Morning Session (9:00 - 10:30)

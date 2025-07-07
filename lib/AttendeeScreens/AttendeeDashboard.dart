@@ -2,7 +2,6 @@ import 'package:event_connect/AdminScreen/AdminDashboard.dart';
 import 'package:event_connect/AttendeeScreens/AboutAsRES.dart';
 import 'package:event_connect/AttendeeScreens/AttendeeLocation.dart';
 import 'package:event_connect/AttendeeScreens/AttendeeSchedule.dart';
-import 'package:event_connect/AttendeeScreens/AttendeeSpeakers.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,12 +20,7 @@ class EventConnectDashboard extends StatefulWidget {
 class _EventConnectDashboardState extends State<EventConnectDashboard>
     with TickerProviderStateMixin {
   int _selectedIndex = 0;
-  final List<String> _tabs = [
-    'Overview',
-    'Full Schedule',
-    'Speakers & Sessions',
-    'Location'
-  ];
+  final List<String> _tabs = ['Overview', 'Schedule', 'Location'];
   User? _currentUser;
   bool _isLoading = false;
   int totalNotificationCount =
@@ -417,9 +411,9 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
         return _buildOverviewContent();
       case 1:
         return const SchedulePage();
+      // case 2:
+      //   return SpeakersPage();
       case 2:
-        return SpeakersPage();
-      case 3:
         return const LocationPage();
       default:
         return _buildOverviewContent();
@@ -837,15 +831,21 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                                     Icons.access_time, '09:00 AM'),
                                 const SizedBox(height: 8),
                                 _buildEventInfoRow(
-                                    Icons.access_time, '07:00 AM'),
+                                    Icons.access_time, '09:00 AM'),
                               ],
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _buildEventInfoRow(
-                          Icons.location_on, 'Melbourne Business School'),
+                      Column(
+                        children: [
+                          _buildEventInfoRow(Icons.location_on,
+                              'Melbourne Business School - Day 1'),
+                          _buildEventInfoRow(Icons.location_on,
+                              'Marriott Docklands - Day 2 & 3'),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -906,7 +906,7 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                         ElevatedButton.icon(
                           onPressed: () async {
                             final Uri url = Uri.parse(
-                                'https://drive.google.com/file/d/147yqiLa-kthxg2uYptbnOgHQCNaxHO2y/view?usp=sharing');
+                                'https://drive.google.com/file/d/1O-0cf5siSQngPqR0y71FFrARh_BPsqk1/view?usp=drive_link');
                             try {
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url,
@@ -1021,7 +1021,7 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                '• Event Name: AsRES International Real Estate Conference 2025\n• Dates: July 9-11, 2025 (3 days)\n• Venues:\n  - Day 1: Melbourne Business School\n  - Day 2-3: Marriott Docklands, Melbourne\n• Focus: Real Estate Research, Sustainability, Net Zero Cities, AI in Real Estate',
+                                '• Event Name: AsRES International Real Estate Conference 2025\n• Dates: July 9-11, 2025 (3 days)\n• Venues:\n  - Day 1: Melbourne Business School\n  - Day 2-3: Marriott Docklands, Melbourne\n',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[700],
@@ -1055,68 +1055,7 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                '• Total Papers: 100+ research presentations\n• PhD Sessions: 5 colloquiums with emerging researchers\n• Peer-Reviewed Sessions: Multiple academic sessions\n• International Scope: Asia-Pacific focus with global participation\n• Industry-Academia Bridge: Strong collaboration between researchers and practitioners',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[700],
-                                  height: 1.4,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Featured Speakers & Sessions
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.purple[50],
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.purple[200]!),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Featured Speakers & Sessions',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.purple[800],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Keynote Speakers:',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                '• Jason F. Yong (Chief Investment Officer, CapitalxWise) - "Accelerating Real Estate Capital & Dealmaking in an AI Era"\n• Professor Naoyuki Yoshino (Professor Emeritus, Keio University, Former Dean ADB Institute)\n• Deputy Lord Mayor Roshena Campbell (City of Melbourne)\n• Peter Verwer - "REITs 4.0: New Frontiers of Global Securitisation"',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[700],
-                                  height: 1.4,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Special Programs:',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                '• Net Zero Cities Masterclass - Full-day intensive program\n• AsRES Women in Property Panel - Professional development and networking\n• MDPI Journals Panel - Urban regeneration lessons from Melbourne Docklands\n• PhD Scholars Mentoring - Career development for emerging researchers',
+                                '• Total Papers: 150+ research presentations\n• PhD Sessions: 5 \n• Peer-Reviewed Sessions: 35\n• International Scope: Asia-Pacific focus with global participation\n• Industry-Academia Bridge: Strong collaboration between researchers and practitioners',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[700],
@@ -1151,40 +1090,6 @@ class _EventConnectDashboardState extends State<EventConnectDashboard>
                               const SizedBox(height: 12),
                               Text(
                                 'Core Areas:\n1. Sustainability & Climate Change\n2. Financial Markets & Investment\n3. Housing & Affordability\n4. Technology & Data Analytics\n5. Urban Planning & Transport\n6. ESG & Sustainable Finance',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[700],
-                                  height: 1.4,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Special Events & Networking
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.teal[50],
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.teal[200]!),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Special Events & Networking',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.teal[800],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Professional Development:\n• Site Visit: 500 Bourke St - Net zero building project (Limited capacity)\n• Industry Panels: Property finance and investment trends\n• Networking Sessions: Welcome reception, conference dinners\n• Exhibition: MSDx student works at Melbourne School of Design\n\nSocial Events:\n• Welcome Reception: University House, Law Building\n• Conference Dinner: Marriott Docklands\n• Gala Dinner: Cargo Hall, South Wharf',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[700],

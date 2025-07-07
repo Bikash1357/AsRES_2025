@@ -48,7 +48,7 @@ class _SchedulePageState extends State<SchedulePage>
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const Day2july10Screen(),
+                const Day2July10Screen(),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
